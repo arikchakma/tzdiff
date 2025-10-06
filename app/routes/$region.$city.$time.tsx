@@ -13,27 +13,27 @@ export function meta(args: Route.MetaArgs) {
 
   return [
     {
-      title: `${fromTZ} ${padTime(fromTime)} in ${toTZ}`,
+      title: `${fromTZ} ${fromTime} in ${toTZ}`,
     },
     {
       name: 'description',
-      content: `Convert ${padTime(fromTime)} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
+      content: `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
     },
     {
       rel: 'canonical',
-      href: `https://tzd.fyi/${fromTZ}/${padTime(fromTime)}`,
+      href: `https://tzd.fyi/${fromTZ}/${fromTime}`,
     },
     {
       property: 'og:title',
-      content: `${fromTZ} ${padTime(fromTime)} in ${toTZ}`,
+      content: `${fromTZ} ${fromTime} in ${toTZ}`,
     },
     {
       property: 'og:description',
-      content: `Convert ${padTime(fromTime)} in ${padTime(fromTZ)} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
+      content: `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
     },
     {
       property: 'og:url',
-      content: `https://tzd.fyi/${fromTZ}/${padTime(fromTime)}`,
+      content: `https://tzd.fyi/${fromTZ}/${fromTime}`,
     },
     {
       property: 'og:type',
@@ -41,7 +41,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:image',
-      content: `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${padTime(fromTime)}&toTime=${padTime(toTime)}&diffInHours=${diffInHoursValue}`,
+      content: `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${fromTime}&toTime=${toTime}&diffInHours=${diffInHoursValue}`,
     },
     {
       name: 'twitter:card',
@@ -61,10 +61,10 @@ export function loader(args: Route.LoaderArgs) {
 
   return {
     fromTZ,
-    toTZ,
-    toTime,
+    toTZ: toTZ,
+    toTime: padTime(toTime),
     diffInHoursValue,
-    fromTime: time,
+    fromTime: padTime(time),
   };
 }
 
@@ -77,7 +77,7 @@ export default function Time(props: Route.ComponentProps) {
         <div className="flex flex-col items-end gap-2">
           <span className="text-5xl font-bold text-zinc-400">{fromTZ}</span>
           <span className="text-9xl font-extrabold tabular-nums">
-            {padTime(fromTime)}
+            {fromTime}
           </span>
         </div>
         <div className="flex flex-col items-center gap-2">
@@ -89,9 +89,7 @@ export default function Time(props: Route.ComponentProps) {
         </div>
         <div className="flex flex-col items-start gap-2">
           <span className="text-5xl font-bold text-zinc-400">{toTZ}</span>
-          <span className="text-9xl font-extrabold tabular-nums">
-            {padTime(toTime)}
-          </span>
+          <span className="text-9xl font-extrabold tabular-nums">{toTime}</span>
         </div>
       </div>
     </div>
