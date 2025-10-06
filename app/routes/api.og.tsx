@@ -26,6 +26,7 @@ export async function loader(args: Route.LoaderArgs) {
         alignItems: 'center',
         height: '100%',
         width: '100%',
+        backgroundColor: 'white',
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
