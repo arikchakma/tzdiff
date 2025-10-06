@@ -1,10 +1,16 @@
 ---
 import BaseLayout from "../../../components/BaseLayout.astro";
+import { getIANAFormat, convertTimeFromRegion } from "../../../lib/timezone.ts";
 
 export const prerender = false;
 const { region, city, time } = Astro.params;
 const userCountry = Astro.request.headers.get('X-Vercel-IP-Country');
 const userCity = Astro.request.headers.get('X-Vercel-IP-City');
+
+const fromTZ = `${region}/${city}`;
+const toTZ = getIANAFormat(userCountry!, userCity!);
+const convertedTime = convertTimeFromRegion(fromTZ, toTZ!, time!);
+
 ---
 <BaseLayout>
   <h1>
@@ -12,5 +18,8 @@ const userCity = Astro.request.headers.get('X-Vercel-IP-City');
   </h1>
   <p>
     {userCountry} {userCity}
+  </p>
+  <p>
+    {fromTZ} {toTZ} {convertedTime}
   </p>
 </BaseLayout>
