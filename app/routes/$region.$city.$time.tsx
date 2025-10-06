@@ -11,25 +11,32 @@ import { geolocation } from '~/lib/geo';
 export function meta(args: Route.MetaArgs) {
   const { fromTZ, toTZ, fromTime, toTime, diffInHoursValue } = args.loaderData;
 
+  const ogTitle = `${fromTZ} ${fromTime} in ${toTZ}`;
+  const ogDescription = `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`;
+
   return [
     {
-      title: `${fromTZ} ${fromTime} in ${toTZ}`,
+      title: ogTitle,
     },
     {
       name: 'description',
-      content: `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
+      content: ogDescription,
     },
     {
       rel: 'canonical',
       href: `https://tzd.fyi/${fromTZ}/${fromTime}`,
     },
     {
+      property: 'og:site_name',
+      content: 'TZD',
+    },
+    {
       property: 'og:title',
-      content: `${fromTZ} ${fromTime} in ${toTZ}`,
+      content: ogTitle,
     },
     {
       property: 'og:description',
-      content: `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
+      content: ogDescription,
     },
     {
       property: 'og:url',
@@ -46,6 +53,22 @@ export function meta(args: Route.MetaArgs) {
     {
       name: 'twitter:card',
       content: 'summary_large_image',
+    },
+    {
+      property: 'og:image:alt',
+      content: ogTitle,
+    },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:image:type',
+      content: 'image/svg+xml',
     },
   ];
 }
