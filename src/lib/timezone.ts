@@ -1,4 +1,4 @@
-const cityTimezoneMapping = new Map([
+export const cityTimezoneMapping = new Map([
   ['Ras Al Khaimah City', ['Asia/Dubai']],
   ['Dubai', ['Asia/Dubai']],
   ['Sharjah', ['Asia/Dubai']],
@@ -4750,7 +4750,7 @@ const cityTimezoneMapping = new Map([
   ['Chitungwiza', ['Africa/Harare']],
 ]);
 
-const countryTimezoneMapping = new Map([
+export const countryTimezoneMapping = new Map([
   ['Afghanistan', ['Asia/Kabul']],
   ['Åland', ['Europe/Mariehamn']],
   ['Albania', ['Europe/Tirane']],
@@ -5165,11 +5165,6 @@ const countryTimezoneMapping = new Map([
   ['Zimbabwe', ['Africa/Harare']],
 ]);
 
-const countryNameFormatter = new Intl.DisplayNames(['en'], { type: 'region' });
-export function getCountryName(countryCode: string) {
-  return countryNameFormatter.of(countryCode);
-}
-
 export function isValidRegion(region: string) {
   try {
     new Intl.DateTimeFormat('en-US', { timeZone: region });
@@ -5177,74 +5172,4 @@ export function isValidRegion(region: string) {
   } catch {
     return false;
   }
-}
-
-export function getIANAFormat(countryCode: string, city?: string) {
-  let tz = '';
-  if (city) {
-    const timezones = cityTimezoneMapping.get(city);
-    if (timezones) {
-      tz = timezones?.[0];
-    }
-  }
-
-  if (!tz) {
-    const timezones = countryTimezoneMapping.get(countryCode);
-    if (timezones) {
-      tz = timezones?.[0];
-    }
-  }
-
-  if (!tz) {
-    return null;
-  }
-
-  return isValidRegion(tz) ? tz : null;
-}
-
-export function convertTimeFromRegion(
-  fromTZ: string,
-  toTZ: string,
-  time: string
-) {
-  // 1. Break down the input time (HH:mm)
-  const [hours, minutes] = time.split(':').map(Number);
-
-  // 2. Use today's date (you could also pass a specific date in)
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-  const day = today.getDate();
-
-  // 3. Create a Date in UTC that corresponds to the given time in `fromTZ`
-  //    We do this by formatting "today midnight" in fromTZ, then adding hours/minutes
-  const utcDate = new Date(Date.UTC(year, month, day, hours, minutes));
-
-  // Adjustment: interpret that as `fromTZ`
-  // Trick: format the UTC date in fromTZ, then get its UTC offset.
-  const fromFormatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: fromTZ,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
-
-  // Get what time that UTC date looks like in `fromTZ`
-  const parts = fromFormatter.formatToParts(utcDate);
-  const fromHours = Number(parts.find((p) => p.type === 'hour')?.value);
-  const fromMinutes = Number(parts.find((p) => p.type === 'minute')?.value);
-
-  // Adjust offset: calculate delta between desired "time" and what we got
-  const deltaMinutes = (hours - fromHours) * 60 + (minutes - fromMinutes);
-  utcDate.setUTCMinutes(utcDate.getUTCMinutes() + deltaMinutes);
-
-  // 4. Now format the adjusted UTC date in the target timezone
-  const toFormatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: toTZ,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
-
-  return toFormatter.format(utcDate);
 }
