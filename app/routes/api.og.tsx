@@ -118,6 +118,8 @@ export async function loader(args: Route.LoaderArgs) {
   return new Response(svg, {
     headers: {
       'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'public, max-age=600, stale-while-revalidate=600', // 10 minutes
+      Vary: 'X-Vercel-IP-Country',
     },
   });
 }

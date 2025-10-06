@@ -97,3 +97,10 @@ export default function Time(props: Route.ComponentProps) {
     </div>
   );
 }
+
+export function headers(args: Route.HeadersArgs) {
+  return {
+    'Cache-Control': 'public, max-age=600, stale-while-revalidate=600', // 10 minutes
+    Vary: 'X-Vercel-IP-Country',
+  };
+}
