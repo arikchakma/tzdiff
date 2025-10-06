@@ -29,7 +29,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:description',
-      content: `Convert ${padTime(fromTime)} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
+      content: `Convert ${padTime(fromTime)} in ${padTime(fromTZ)} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`,
     },
     {
       property: 'og:url',
@@ -41,7 +41,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:image',
-      content: `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${fromTime}&toTime=${toTime}&diffInHours=${diffInHoursValue}`,
+      content: `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${padTime(fromTime)}&toTime=${padTime(toTime)}&diffInHours=${diffInHoursValue}`,
     },
     {
       name: 'twitter:card',
