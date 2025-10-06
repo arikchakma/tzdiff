@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../../components/BaseLayout.astro";
+
+export const prerender = false;
+const { region, city, time } = Astro.params;
+const userCountry = Astro.request.headers.get('X-Vercel-IP-Country');
+const userCity = Astro.request.headers.get('X-Vercel-IP-City');
+---
+<BaseLayout>
+  <h1>
+    {region} {city} {time}
+  </h1>
+  <p>
+    {userCountry} {userCity}
+  </p>
+</BaseLayout>
