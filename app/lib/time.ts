@@ -4,8 +4,8 @@ import {
   isValidRegion,
 } from './timezone';
 
-function pad(value: number) {
-  return value.toString().padStart(2, '0');
+function pad(value: number, length: number = 2) {
+  return value.toString().padStart(length, '0');
 }
 
 export function padTime(time: string = '00:00'): string {
@@ -143,9 +143,57 @@ export function capitalize(str: string) {
 export function buildTimezone(region: string, city: string) {
   const normalizedRegion = capitalize(region);
   const normalizedCity = city
-    .split(/[\s-]+/)
+    .replace(/[_\s-]+/g, '_')
+    .split('_')
     .map(capitalize)
     .join('_');
 
   return `${normalizedRegion}/${normalizedCity}`;
+}
+
+export function normalizeTime(input: string) {
+  const digits = input.replace(/\D/g, '');
+  if (digits.length > 4) {
+    return '0000';
+  }
+
+  return digits.padStart(4, '0');
+}
+
+export function formatTime(input: string) {
+  const digits = normalizeTime(input);
+  const padded = digits.padStart(4, '0');
+  const hours = parseInt(padded.slice(0, 2), 10);
+  const minutes = parseInt(padded.slice(2, 4), 10);
+
+  if (hours > 23 || minutes > 59) {
+    return '00:00';
+  }
+
+  return `${padded.slice(0, 2)}:${padded.slice(2, 4)}`;
+}
+
+export function hasDivider(input: string) {
+  return input.includes(':');
+}
+
+export function toTimezoneTime(date: Date, tz: string): string {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+
+  return formatter.format(date);
+}
+
+export function parseTzTime(tz: string, time: string) {
+  const [region, city] = tz.split('/');
+
+  return {
+    region,
+    city,
+    time,
+  };
 }

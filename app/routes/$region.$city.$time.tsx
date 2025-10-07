@@ -1,18 +1,25 @@
 import {
   buildTimezone,
   diffInHours,
+  formatTime,
+  hasDivider,
   padTime,
+  parseTzTime,
   resolveTimezone,
   zonify,
 } from '~/lib/time';
 import type { Route } from './+types/$region.$city.$time';
 import { geolocation } from '~/lib/geo';
+import { redirect } from 'react-router';
 
 export function meta(args: Route.MetaArgs) {
   const { fromTZ, toTZ, fromTime, toTime, diffInHoursValue } = args.loaderData;
+  const { region, city, time } = parseTzTime(fromTZ, fromTime);
 
-  const ogTitle = `${fromTZ} ${fromTime} in ${toTZ}`;
-  const ogDescription = `Convert ${fromTime} in ${fromTZ} to ${toTZ}. Instantly compare time zones and calculate the time difference (+${diffInHoursValue} hours).`;
+  const ogTitle = `${fromTZ} ${fromTime} = ${toTime} in ${toTZ} (+${diffInHoursValue} hours)`;
+  const ogDescription = `Convert ${fromTime} in ${fromTZ} to ${toTZ} (+${diffInHoursValue} hours). Share this link to instantly see local equivalents across time zones.`;
+  const ogImage = `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${fromTime}&toTime=${toTime}&diffInHours=${diffInHoursValue}`;
+  const ogUrl = `https://tzd.fyi/${fromTZ}/${fromTime}`;
 
   return [
     {
@@ -24,7 +31,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       rel: 'canonical',
-      href: `https://tzd.fyi/${fromTZ}/${fromTime}`,
+      href: ogUrl,
     },
     {
       property: 'og:site_name',
@@ -40,7 +47,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:url',
-      content: `https://tzd.fyi/${fromTZ}/${fromTime}`,
+      content: ogUrl,
     },
     {
       property: 'og:type',
@@ -48,11 +55,23 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:image',
-      content: `https://tzd.fyi/api/og?from=${fromTZ}&to=${toTZ}&fromTime=${fromTime}&toTime=${toTime}&diffInHours=${diffInHoursValue}`,
+      content: ogImage,
     },
     {
       name: 'twitter:card',
       content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: ogTitle,
+    },
+    {
+      name: 'twitter:description',
+      content: ogDescription,
+    },
+    {
+      name: 'twitter:image',
+      content: ogImage,
     },
     {
       property: 'og:image:alt',
@@ -70,11 +89,48 @@ export function meta(args: Route.MetaArgs) {
       property: 'og:image:type',
       content: 'image/png',
     },
+    {
+      'script:ld+json': JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: ogTitle,
+        description: ogDescription,
+        url: ogUrl,
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: region,
+              item: `https://tzd.fyi/${region}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: city,
+              item: `https://tzd.fyi/${region}/${city}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: time,
+              item: ogUrl,
+            },
+          ],
+        },
+      }),
+    },
   ];
 }
 
 export function loader(args: Route.LoaderArgs) {
   const { region, city, time } = args.params;
+  if (!hasDivider(time)) {
+    const normalizedTime = formatTime(time);
+    throw redirect(`/${region}/${city}/${normalizedTime}`);
+  }
+
   const { countryCode, city: userCity } = geolocation(args.request.headers);
 
   const fromTZ = buildTimezone(region, city);

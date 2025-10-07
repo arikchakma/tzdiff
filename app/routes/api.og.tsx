@@ -129,7 +129,6 @@ export async function loader(args: Route.LoaderArgs) {
     headers: {
       'Content-Type': 'image/png',
       'cache-control': 'public, immutable, no-transform, max-age=86400', // 1 day
-      Vary: 'X-Vercel-IP-Country',
     },
   });
 }
