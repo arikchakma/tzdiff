@@ -1,5 +1,6 @@
 import satori from 'satori';
 import type { Route } from './+types/api.og';
+import { renderAsync } from '@resvg/resvg-js';
 
 export async function loader(args: Route.LoaderArgs) {
   const searchParams = new URL(args.request.url).searchParams;
@@ -11,12 +12,14 @@ export async function loader(args: Route.LoaderArgs) {
 
   const baseUrl = new URL(args.request.url).origin;
 
-  const interBuffer = await fetch(
-    new URL('/fonts/Inter-ExtraBold.ttf', baseUrl)
-  ).then((res) => res.arrayBuffer());
-  const interBoldBuffer = await fetch(
-    new URL('/fonts/Inter-Bold.ttf', baseUrl)
-  ).then((res) => res.arrayBuffer());
+  const [interBuffer, interBoldBuffer] = await Promise.all([
+    fetch(new URL('/fonts/Inter-ExtraBold.ttf', baseUrl)).then((res) =>
+      res.arrayBuffer()
+    ),
+    fetch(new URL('/fonts/Inter-Bold.ttf', baseUrl)).then((res) =>
+      res.arrayBuffer()
+    ),
+  ]);
 
   const svg = await satori(
     <div
@@ -115,10 +118,17 @@ export async function loader(args: Route.LoaderArgs) {
     }
   );
 
-  return new Response(svg, {
+  const image = await renderAsync(svg, {
+    fitTo: {
+      mode: 'original',
+    },
+  });
+  const png = new Uint8Array(image.asPng());
+
+  return new Response(png, {
     headers: {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=600, stale-while-revalidate=600', // 10 minutes
+      'Content-Type': 'image/png',
+      'cache-control': 'public, immutable, no-transform, max-age=86400', // 1 day
       Vary: 'X-Vercel-IP-Country',
     },
   });
