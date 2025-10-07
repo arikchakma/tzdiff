@@ -68,7 +68,7 @@ export function meta(args: Route.MetaArgs) {
     },
     {
       property: 'og:image:type',
-      content: 'image/svg+xml',
+      content: 'image/png',
     },
   ];
 }
