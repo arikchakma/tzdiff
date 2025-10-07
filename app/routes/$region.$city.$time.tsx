@@ -152,23 +152,33 @@ export default function Time(props: Route.ComponentProps) {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-12">
-        <div className="flex flex-col items-end gap-2">
-          <span className="text-5xl font-bold text-zinc-400">{fromTZ}</span>
-          <span className="text-9xl font-extrabold tabular-nums">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-12 max-md:grid-cols-1 max-md:gap-6">
+        <div className="flex flex-col items-end gap-2 max-md:items-center">
+          <span className="text-5xl font-bold text-zinc-400 max-xl:text-4xl max-lg:text-3xl">
+            {fromTZ}
+          </span>
+          <span className="text-9xl font-extrabold tabular-nums max-xl:text-8xl max-lg:text-7xl max-md:text-8xl">
             {fromTime}
           </span>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-5xl font-bold text-zinc-200">&nbsp;</span>
-          <span className="text-9xl font-extrabold text-zinc-200">&rarr;</span>
-          <span className="text-4xl font-bold text-zinc-300">
+          <span className="text-5xl font-bold text-zinc-200 max-xl:text-4xl max-lg:text-3xl max-md:hidden">
+            &nbsp;
+          </span>
+          <span className="text-9xl font-extrabold text-zinc-200 max-xl:text-8xl max-lg:text-7xl max-md:rotate-90 max-md:text-8xl">
+            &rarr;
+          </span>
+          <span className="text-4xl font-bold text-zinc-300 max-lg:text-2xl max-md:hidden">
             +{diffInHoursValue} hour{diffInHoursValue > 1 ? 's' : ''}
           </span>
         </div>
-        <div className="flex flex-col items-start gap-2">
-          <span className="text-5xl font-bold text-zinc-400">{toTZ}</span>
-          <span className="text-9xl font-extrabold tabular-nums">{toTime}</span>
+        <div className="flex flex-col items-start gap-2 max-md:items-center">
+          <span className="text-5xl font-bold text-zinc-400 max-xl:text-4xl max-lg:text-3xl">
+            {toTZ}
+          </span>
+          <span className="text-9xl font-extrabold tabular-nums max-xl:text-8xl max-lg:text-7xl max-md:text-8xl">
+            {toTime}
+          </span>
         </div>
       </div>
     </div>
