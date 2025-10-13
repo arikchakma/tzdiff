@@ -18,14 +18,7 @@ export const links: Route.LinksFunction = () => {
     },
     {
       rel: 'preload',
-      href: '/fonts/Inter-ExtraBold.ttf',
-      as: 'font',
-      type: 'font/ttf',
-      crossOrigin: 'anonymous',
-    },
-    {
-      rel: 'preload',
-      href: '/fonts/Inter-Bold.ttf',
+      href: '/fonts/InterVariable.ttf',
       as: 'font',
       type: 'font/ttf',
       crossOrigin: 'anonymous',
