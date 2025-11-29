@@ -1,12 +1,20 @@
 {
   "name": "tzdiff",
-  "private": true,
+  "description": "Share Your Time Across Time Zones",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
+  },
+  "author": "Arik Chakma",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arikchakma/tzdiff"
   },
   "dependencies": {
     "@react-router/fs-routes": "^7.9.3",
