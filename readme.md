@@ -1,10 +1,8 @@
 <div align="center">
-  <h3>🌍 TZD</h2>
+  <h2>🌍 TZD</h2>
   <p>Share Your Time Across Time Zones.</p>
   <a href="https://tzd.fyi"><strong>tzd.fyi</strong></a>
 </div>
-
----
 
 ### What Does It Do?
 
